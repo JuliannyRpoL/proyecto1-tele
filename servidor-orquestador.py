@@ -27,7 +27,7 @@ def setValue():
                 elif(newDataServers not in dataServers[request.json['key']]): #si los nodos propuestos no se encuentran mapeados se agregan
                     dataServers[request.json['key']].append(newDataServers)                    
 
-                return jsonify(f'Valor almacenado exitosamente en la particion {leader}'), 201
+                return jsonify(f'Valor almacenado exitosamente en la particion {leader + 1}'), 201
             else:
                 return jsonify("error almacenando el dato, no hay servers data"), 400
 
@@ -71,13 +71,13 @@ def newServer():
                             leaderSelected = idx
                             minFollowers = followersNumber
 
-                    requests.post(leadersWithFollowers[leader]["url"]+"follower", json=request.json) #se le avisa al leader que tiene nuevo follower
+                    requests.post(leadersWithFollowers[leaderSelected]["url"]+"follower", json=request.json) #se le avisa al leader que tiene nuevo follower
                     leadersWithFollowers[leaderSelected]['followers'].append(request.json['url']) #se agrega follower a leader
                     availableServers.append(request.json['url'])
 
                     for key in dataServers: #ciclo para agregar follower nuevo a las opciones donde se puede leer la data
                         for partitions in dataServers[key]:
-                            if(leadersWithFollowers[leader]["url"] in partitions):
+                            if(leadersWithFollowers[leaderSelected]["url"] in partitions):
                                 partitions.append(request.json['url'])
                                 break
 
@@ -91,7 +91,7 @@ def newServer():
 
 @app.route('/leader', methods=['POST'])
 def newLeader():
-    if request.method == 'POST' and 'type' in request.json and 'url' in request.json:
+    if request.method == 'POST' and 'url' in request.json:
         #try:
             if(request.json['url'] not in availableServers):
                 leadersWithFollowers.append({
@@ -112,7 +112,7 @@ def newLeader():
 
 @app.route('/follower', methods=['POST'])
 def newFollower():
-    if request.method == 'POST' and 'type' in request.json and 'url' in request.json and 'leader' in request.json:
+    if request.method == 'POST' and 'url' in request.json and 'leader' in request.json:
         #try:
             if(request.json['url'] not in availableServers):
                 addedFollower = -1
