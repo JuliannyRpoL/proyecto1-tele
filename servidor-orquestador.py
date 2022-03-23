@@ -1,3 +1,4 @@
+import json
 from random import randrange
 from flask import Flask, jsonify, request
 import requests
@@ -35,6 +36,26 @@ def setValue():
             return jsonify("error almacenando el dato"), 400
 
     return jsonify("error almacenando el dato"), 400
+
+
+@app.route('/value', methods=['GET'])
+def getValue():
+    key = request.args.get('key')
+    if(key and key in dataServers):
+        try:
+            responseAll = []
+            for partition in dataServers[key]:
+                nodo = randrange(len(partition))
+                response = requests.get(f'{partition[nodo]}value', params={'key': key})
+                response = json.loads(response.content)
+                responseAll = responseAll + response
+
+            return jsonify(responseAll), 200
+        except:
+            return jsonify("error obteniendo datos, intente nuevamente"), 500
+
+
+    return jsonify("error obteniendo datos, key no encontrada"), 400
 
 
 @app.route('/dataServers', methods=['GET'])
