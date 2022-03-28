@@ -6,8 +6,11 @@ app = Flask(__name__)
 data = {}
 followers = []
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['POST', "GET"])
 def setValue():
+    if request.method == "GET":
+        return jsonify("Bienvenido al lead"), 200
+
     if request.method == 'POST' and 'key' in request.json and 'value' in request.json:
         try:
             if(request.json['key'] not in data):
@@ -29,7 +32,7 @@ def setValue():
 @app.route('/value', methods=['GET'])
 def getValue():
     if(request.args.get('key')):
-        try:    
+        try:
             return jsonify(data[request.args.get('key')]), 200
 
         except:
@@ -40,7 +43,7 @@ def getValue():
 
 @app.route('/', methods=['GET'])
 def getValues():
-    try:    
+    try:
         return jsonify(data), 200
 
     except:
