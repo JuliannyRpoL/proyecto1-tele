@@ -26,7 +26,7 @@ def setValue():
                 if(request.json['key'] not in dataServers): #si la key es nueva, añade los posibles nodos donde se puede hallar
                     dataServers[request.json['key']] = [ newDataServers ]
                 elif(newDataServers not in dataServers[request.json['key']]): #si los nodos propuestos no se encuentran mapeados se agregan
-                    dataServers[request.json['key']].append(newDataServers)                    
+                    dataServers[request.json['key']].append(newDataServers)
 
                 return jsonify(f'Valor almacenado exitosamente en la particion {leader + 1}'), 201
             else:
@@ -60,7 +60,7 @@ def getValue():
 
 @app.route('/dataServers', methods=['GET'])
 def getDataServers():
-    try:    
+    try:
         return jsonify(dataServers), 200
 
     except:
@@ -125,7 +125,7 @@ def newLeader():
                 return jsonify(f'Leader # {len(leadersWithFollowers)} añadido exitosamente'), 201
             else:
                 return jsonify("error añadiendo leader a la red, ya existe server en la red"), 400
-   
+
         # except:
 
     return jsonify("error añadiendo leader a la red, datos incorrectos"), 400
@@ -152,7 +152,7 @@ def newFollower():
 
                         addedFollower = idx
                         break
-                        
+
                 if(addedFollower != -1):
                     availableServers.append(request.json['url'])
 
@@ -167,7 +167,7 @@ def newFollower():
 
 @app.route('/servers', methods=['GET'])
 def getServers():
-    try:    
+    try:
         return jsonify(leadersWithFollowers), 200
 
     except:
