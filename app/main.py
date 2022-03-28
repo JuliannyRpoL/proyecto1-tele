@@ -16,7 +16,7 @@ availableServers = []
 @app.route('/', methods=['POST', "GET"])
 def setValue():
     if request.method == "GET":
-        jsonify("Bienvenido al orquestador")
+        return jsonify("Bienvenido al orquestador"), 200
 
     if request.method == 'POST' and 'key' in request.json and 'value' in request.json:
         try:
