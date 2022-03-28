@@ -4,8 +4,11 @@ app = Flask(__name__)
 
 data = {}
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['POST', "GET"])
 def setValue():
+    if request.method == "GET":
+        return jsonify("Bienvenido al follower"), 200
+
     if request.method == 'POST' and 'key' in request.json and 'value' in request.json:
         try:
             if(request.json['key'] not in data):
