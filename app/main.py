@@ -9,10 +9,15 @@ dataServers = {}
 leadersWithFollowers = []
 availableServers = []
 
+# ----------------Index-----------------
+
 #----------------endpoints to manage data-----------------
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['POST', "GET"])
 def setValue():
+    if request.method == "GET":
+        jsonify("Bienvenido al orquestador")
+
     if request.method == 'POST' and 'key' in request.json and 'value' in request.json:
         try:
             if(len(leadersWithFollowers) != 0): #si hay nodos en la red
