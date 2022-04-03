@@ -9,15 +9,14 @@ dataServers = {}
 leadersWithFollowers = []
 availableServers = []
 
-# ----------------Index-----------------
-
 #----------------endpoints to manage data-----------------
-
-@app.route('/', methods=['POST', "GET"])
-def setValue():
+@app.route('/', methods=['GET'])
+def welcome():
     if request.method == "GET":
         return jsonify("Bienvenido al orquestador"), 200
 
+@app.route('/', methods=['POST'])
+def setValue():
     if request.method == 'POST' and 'key' in request.json and 'value' in request.json:
         try:
             if(len(leadersWithFollowers) != 0): #si hay nodos en la red
@@ -71,6 +70,18 @@ def getDataServers():
     except:
         return jsonify("Error getting data servers"), 400
 
+
+@app.route('/reset', methods=['DELETE'])
+def resetData():
+    try:
+        dataServers.clear()
+        availableServers.clear()
+        leadersWithFollowers.clear()
+
+        return jsonify("Reseted data successfully"), 200
+
+    except:
+        return jsonify("Error getting data"), 400
 
 #----------------endpoints to manage server network-----------------
 
@@ -180,4 +191,4 @@ def getServers():
 
 
 if __name__ == "__main__":
-    app.run(port=3000, debug=True, host="0.0.0.0")
+    app.run()
