@@ -4,11 +4,13 @@ app = Flask(__name__)
 
 data = {}
 
-@app.route('/', methods=['POST', "GET"])
-def setValue():
+@app.route('/', methods=['GET'])
+def welcome():
     if request.method == "GET":
         return jsonify("Bienvenido al follower"), 200
 
+@app.route('/', methods=['POST'])
+def setValue():
     if request.method == 'POST' and 'key' in request.json and 'value' in request.json:
         try:
             if(request.json['key'] not in data):
@@ -52,7 +54,7 @@ def getValue():
     return jsonify("Error getting data, missing key in queryparam"), 400
 
 
-@app.route('/', methods=['GET'])
+@app.route('/all-values', methods=['GET'])
 def getValues():
     try:    
         return jsonify(data), 200
@@ -60,6 +62,16 @@ def getValues():
     except:
         return jsonify("Error getting data"), 400
 
+
+@app.route('/reset', methods=['DELETE'])
+def resetData():
+    try:
+        data.clear()
+
+        return jsonify("Reseted data successfully"), 200
+
+    except:
+        return jsonify("Error getting data"), 400
+
 if __name__ == "__main__":
-    port = input()
-    app.run(port=port, debug=True, host="0.0.0.0")
+    app.run()
